@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0, target-densitydpi=device-dpi">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title></title>
+    <style>
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        html {
+            overflow: hidden;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #333333;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        #gamediv {
+            margin: 0;
+            padding: 0;
+            height: 960px;
+            min-height: 960px;
+            width: 100%;
+            display: block;
+        }
+
+        #canvas {
+            background-color: #64B5DF;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -172px;
+            margin-left: -160px;
+            z-index: 1;
+        }
+    </style>
+    <link type="text/css" href="/jquery.mobile.custom/jquery.mobile.custom.structure.css" />
+    <link type="text/css" href="/jquery.mobile.custom/jquery.mobile.custom.theme.css" />
+    <script type="text/javascript" src="/js/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="/jquery.mobile.custom/jquery.mobile.custom.min.js"></script>
+    <script type="text/javascript" src="/Box2dWeb-2.1a.3/Box2dWeb-2.1.a.3.js"></script>
+</head>
+<body>
+    <img id="img2" />
+    <canvas id="canvas" width="765" height="946" style="margin-top: 0px; margin-left: 0px; left: 577px; top: 0px;"></canvas>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        GameInit();
+        init();
+    });
+    function init() {
+        var b2Vec2 = Box2D.Common.Math.b2Vec2
+         	, b2BodyDef = Box2D.Dynamics.b2BodyDef
+         	, b2Body = Box2D.Dynamics.b2Body
+         	, b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+         	, b2Fixture = Box2D.Dynamics.b2Fixture
+         	, b2World = Box2D.Dynamics.b2World
+         	, b2MassData = Box2D.Collision.Shapes.b2MassData
+         	, b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+         	, b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+         	, b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+        ;
+        //世界
+        world = new b2World(
+               new b2Vec2(0, 10)    //gravity
+            , true                 //allow sleep
+         );
+        //刚体
+        var bodyDef = new b2BodyDef;
+        //create ground
+        bodyDef.type = b2Body.b2_staticBody;
+        bodyDef.position.x = 9;
+        bodyDef.position.y = 13;
+        var body = world.CreateBody(bodyDef);
+        //设备
+        var fixDef = new b2FixtureDef;
+        fixDef.density = 1.0;
+        fixDef.friction = 0.5;
+        fixDef.restitution = 0.2;
+        fixDef.shape = new b2PolygonShape;
+        fixDef.shape.SetAsBox(10, 0.5);
+        body.CreateFixture(fixDef);
+
+        //create some objects
+
+        // 物体类型定义，基本上常用的有两种定义：b2_staticBody 静态物体; .b2_dynimacBod动态物体
+        //bodyDef.type = b2Body.b2_dynamicBody;
+        //for (var i = 0; i < 10; ++i) {
+        //    if (Math.random() > 0.5) {
+        //        fixDef.shape = new b2PolygonShape;
+        //        fixDef.shape.SetAsBox(
+        //              Math.random() + 0.1 //half width
+        //           , Math.random() + 0.1 //half height
+        //        );
+        //    } else {
+        //        fixDef.shape = new b2CircleShape(
+        //           Math.random() + 0.1 //radius
+        //        );
+        //    }
+        //定义物体位置。也可以这样 bodydef.position.x=10; bodydef.position.y=10;
+        //    bodyDef.position.x = Math.random() * 10;
+        //    bodyDef.position.y = Math.random() * 10;
+        //    world.CreateBody(bodyDef).CreateFixture(fixDef);
+        //}
+
+        //setup debug draw
+        var debugDraw = new b2DebugDraw();
+        var ctxall = document.createElement("canvas");
+        ctxall.height = _canvas.height;
+        ctxall.width = _canvas.width;
+        //ctxall.getContext("2d");
+        debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
+        debugDraw.SetDrawScale(30.0);
+        debugDraw.SetFillAlpha(0.3);
+        debugDraw.SetLineThickness(1.0);
+        debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+        world.SetDebugDraw(debugDraw);
+
+        window.setInterval(update, 1000 / 60);
+
+        function update() {
+            world.Step(
+                  1 / 60   //frame-rate
+               , 10       //velocity iterations
+               , 10       //position iterations
+            );
+            world.DrawDebugData();
+            world.ClearForces();
+        };
+    }
+    function GameInit() {
+        var Game = {};
+        var _canvas = document.getElementById("canvas");
+        var _cancontext = _canvas.getContext("2d");
+        var gameBG;
+        //背景图
+        var gameBGImg = new Image();
+        gameBGImg.src = "/zuqiu/images/soccerassets.png";
+        gameBGImg.onload = function () {
+            DrawImage();
+        }
+        AutoHeight();
+        window.onresize = AutoHeight;
+        function AutoHeight() {
+            Game.height = $(window).height();
+            Game.width = $(window).width();
+            Game.aotuWidth = Game.height * 0.65;
+            $("#canvas").css("height", Game.height);
+            $("#canvas").css("width", Game.aotuWidth);
+            $("#canvas").css("left", (Game.width - Game.aotuWidth) / 2);
+        }
+        function DrawImage() {
+            if (gameBG == null) {
+                gameBG = new Image();
+                var img = GetGameImageBG("GameBG1");
+                var ctxall = document.createElement("canvas");
+                ctxall.height = _canvas.height;
+                ctxall.width = _canvas.width;
+                var ctsall = ctxall.getContext("2d");
+                ctsall.clearRect(0, 0, ctxall.width, ctxall.height);
+                ctsall.rotate(Math.PI / 180 * -90);//开始旋转
+                ctsall.drawImage(gameBGImg, img.left, img.top, img.width, img.height, -ctxall.height, 0, ctxall.height, ctxall.width);
+                //_cancontext.stroke();
+                gameBG.src = ctxall.toDataURL("image/png");
+            }
+            var n = 2;
+            var beginX = 0;
+            var beginY = 0;
+            var endX = 300;
+            var endY = 0;
+            var r = 0;
+            var foodball = GetGameImageBG("Football");
+            footballImg = GetFootball(foodball);
+            var bgAnimation = window.setInterval(function () {
+                n = (n > 5 ? 2 : n);
+                _cancontext.drawImage(gameBG, 0, 0, ctxall.width, ctxall.height, 0, 0, _canvas.width, _canvas.height);
+                var imgBG2 = GetGameImageBG("GameBG" + n++);
+                _cancontext.drawImage(gameBGImg, imgBG2.left, imgBG2.top, imgBG2.width, imgBG2.height, 0, 640, _canvas.width, 130);
+                AnimationImg(foodball, r++, beginX++, beginY++, endX, endY);
+            }, 50);
+            //_cancontext.drawImage(gameBG, 0, 0, ctxall.width, ctxall.height, 0, 0, _canvas.width, _canvas.height);
+            //var imgBG2 = GetGameImageBG("Football");
+            //_cancontext.drawImage(footballImg, 0, 0, 85, 70, 0, 0, 85, 70);
+        }
+        var footballImg;
+        function GetFootball(imgInfo) {
+            var ctxall = document.createElement("canvas");
+            ctxall.height = 70;
+            ctxall.width = 85;
+            var ctsall = ctxall.getContext("2d");
+            ctsall.drawImage(gameBGImg, imgInfo.left, imgInfo.top, imgInfo.width, imgInfo.height, 0, 0, 85, 70);
+            var img = new Image();
+            img.src = ctxall.toDataURL("image/png");
+            return img;
+        }
+        function AnimationImg(imgInfo, r, beginX, beginY, endX, endY) {
+            if (beginX > endX) {
+                beginX = endX;
+            }
+            if (beginY > endY) {
+                beginY = endY;
+            }
+            var ctxall = document.createElement("canvas");
+            ctxall.height = 70;
+            ctxall.width = 85;
+            var ctsall = ctxall.getContext("2d");
+            ctsall.translate(0, 0);
+            ctsall.clearRect(0, 0, ctxall.width, ctxall.height);
+            ctsall.rotate(Math.PI / 360 * r);//开始旋转
+            var x = (r % 360) / 2.5;
+            var y = 0;
+            ctsall.drawImage(footballImg, 0, 0, 85, 70, x, x, 85, 70);
+            var footBall = new Image();
+            footBall.src = ctxall.toDataURL("image/png");
+            _cancontext.drawImage(footBall, 0, 0, ctxall.width, ctxall.height, beginX, beginY, 85, 70);
+        }
+        function GetGameImageBG(imgName) {
+            var img = {};
+            switch (imgName) {
+                case "GameBG1":
+                    img.left = 2;
+                    img.top = 2;
+                    img.width = 550;
+                    img.height = 356;
+                    break;
+                case "GameBG2":
+                    img.left = 234;
+                    img.top = 1408;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "GameBG3":
+                    img.left = 302;
+                    img.top = 1481;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "GameBG4":
+                    img.left = 636;
+                    img.top = 1481;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "GameBG5":
+                    img.left = 568;
+                    img.top = 1408;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "Football":
+                    img.left = 523;
+                    img.top = 1555;
+                    img.width = 68;
+                    img.height = 68;
+                    break;
+                default:
+                    break;
+            }
+            return img;
+        }
+    }
+</script>

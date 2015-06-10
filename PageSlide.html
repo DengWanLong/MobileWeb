@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0, target-densitydpi=device-dpi">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title></title>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.pageslide.js"></script>
+</head>
+<body>
+
+    <ul>
+        <li><a href="_left.html" id="slide-left">左侧页面</a></li>
+        <li><a href="_right.html" id="slide-right">右侧页面</a></li>
+        <li><a href="_modal.html" id="slide-modal">模态页面</a></li>
+    </ul>
+
+</body>
+</html>
+<script type="text/javascript">
+    $("#slide-left").pageSlide({ width: "350px", direction: "left" });
+    $("#slide-right").pageSlide({ width: "350px", direction: "right" });
+    $("#slide-modal").pageSlide({ width: "350px", direction: "left", modal: true });
+</script>

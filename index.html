@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0, target-densitydpi=device-dpi">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title></title>
+    <style>
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        html {
+            overflow: hidden;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #333333;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        #gamediv {
+            margin: 0;
+            padding: 0;
+            height: 960px;
+            min-height: 960px;
+            width: 100%;
+            display: block;
+        }
+
+        #canvas {
+            background-color: #64B5DF;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -172px;
+            margin-left: -160px;
+            z-index: 1;
+        }
+    </style>
+    <link type="text/css" href="/jquery.mobile.custom/jquery.mobile.custom.structure.css" />
+    <link type="text/css" href="/jquery.mobile.custom/jquery.mobile.custom.theme.css" />
+    <script type="text/javascript" src="/js/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="/jquery.mobile.custom/jquery.mobile.custom.min.js"></script>
+</head>
+<body>
+    <img id="img2" />
+    <canvas id="canvas" width="765" height="946" style="margin-top: 0px; margin-left: 0px; left: 577px; top: 0px;"></canvas>
+</body>
+</html>
+<script type="text/javascript">
+    function print(o, level) {
+        var html = "";
+        var getType = Object.prototype.toString;
+        if (getType.call(o) == "[object Array]") {
+            html = o.join(",");
+        }
+        else if (getType.call(o) == "[object Number]" || getType.call(o) == "[object Boolean]") {
+            html = o.toString();
+        }
+        else if (getType.call(o) == "[object Undefined]" || getType.call(o) == "[object Null]") {
+            html = "";
+        }
+        else if (getType.call(o) == "[object Object]") {
+            html = JSON.stringify(o);
+        }
+        else if (getType.call(o) == "[object Function]") {
+            html = "当前对象为函数不能输出";
+        }
+        else if (getType.call(o) == "[object String]") {
+            html = o;
+        }
+        if (level != null) {
+            for (var i = 0; i < level; i++) {
+                html = "　　" + html;
+            }
+            html += "</br>";
+        }
+        document.body.innerHTML += "</br>" + html;
+    }
+    var num = 1.234567;
+    // 保留两位小数
+    num = num.toFixed(2);
+
+    print("保留两位小数:");
+    print(num, 1);
+
+    var temp1 = [1, 2, 5, 6, 7, 8, 9];
+    var temp2 = [3, 4];
+    //组成新的数组
+    var temp = temp1.concat(temp2);
+    //从数组的前端移除元素并返回移除元素的值
+    var value = temp.shift();
+    //从数组的末尾移除元素
+    temp.pop();
+    //移除指定位置指定长度的数组(移除从第3位开始的2个元素)
+    temp.splice(3, 2);
+    //在数组前面加元素
+    temp.unshift(0);
+    //在数组后面加元素
+    temp.push(10);
+    //在数组指定位置插入元素从第2位开始插入temp2
+    temp.splice(2, 0, temp2);
+    temp = [0, 2, 3, 4, 5, 6, 9, 3, 10];
+    //为数组排序（倒序）
+    function sortIntAsc(num1, num2) {
+        return num1 - num2;
+    }
+    function sortIntDesc(num1, num2) {
+        return num2 - num1;
+    }
+    temp.reverse();
+    //为数组排序（正序）该方法对int类型排序会有小问题
+    temp.sort(sortIntAsc);
+    //倒序
+    temp.sort(sortIntDesc);
+    print("为数组排序:");
+    print(temp, 1);
+    //遍历数组
+    var total = 0;
+    temp.forEach(function (num) {
+        total += num;
+    });
+    print("遍历数组:");
+    print(total, 1);
+    //迭代器方法
+    function isEven(num) {
+        return num % 2 == 0;
+    }
+    temp = [2, 4, 6, 8];//[1, 2, 4, 6, 8];
+    //全部元素满足条件才返回true
+    var even = temp.every(isEven);
+    print("迭代器方法:");
+    if (even) {
+        print("数组中全是偶数", 1);
+    }
+    else {
+        print("数组中包含奇数", 1);
+    }
+    temp = [1, 2, 3, 5, 7];//[1, 3, 5, 7];
+    //只要有一个元素满足条件就返回true
+    even = temp.some(isEven);
+    if (even) {
+        print("数组中包含偶数", 1);
+    }
+    else {
+        print("数组中全是奇数", 1);
+    }
+    //reduce该方法会从一个累加值开始，不断对累加值和数组中的后续元素调用该函数，
+    function add(runningTotal, currentValue) {
+        return runningTotal + currentValue;
+    }
+    var nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    var sum = nums.reduce(add);
+    //add(1, 2) - > 3
+    //add(3, 3) - > 6
+    //add(6, 4) - > 10
+    //add(10, 5) - > 15
+    //add(15, 6) - > 21
+    //add(21, 7) - > 28
+    //add(28, 8) - > 36
+    //add(36, 9) - > 45
+    //add(45, 10) - > 55
+
+    print(sum, 1)
+
+    //生成新数组的迭代方法
+    function curve(grade) {
+        return grade += 5;
+    }
+    var grades = [1, 2, 3, 4, 5];
+    var newgrades = grades.map(curve);
+    print(newgrades, 1);
+
+    function isOld(num) {
+        return num % 2 != 0;
+    }
+    //返回符合条件的元素 组成一个新的数组
+    var evens = grades.filter(isEven);
+    var olds = grades.filter(isOld);
+    print(evens, 1);
+    print(olds, 1);
+    //二维数组
+</script>
+<script type="text/javascript">
+    document.body.onload = function () {
+        GameInit();
+    }
+    function GameInit() {
+        var Game = {};
+        var _canvas = document.getElementById("canvas");
+        var _cancontext = _canvas.getContext("2d");
+        var gameBG;
+        //背景图
+        var gameBGImg = new Image();
+        gameBGImg.src = "/zuqiu/images/soccerassets.png";
+        gameBGImg.onload = function () {
+            DrawImage();
+        }
+        AutoHeight();
+        window.onresize = AutoHeight;
+        function AutoHeight() {
+            Game.height = $(window).height();
+            Game.width = $(window).width();
+            Game.aotuWidth = Game.height * 0.65;
+            $("#canvas").css("height", Game.height);
+            $("#canvas").css("width", Game.aotuWidth);
+            $("#canvas").css("left", (Game.width - Game.aotuWidth) / 2);
+        }
+        function DrawImage() {
+            if (gameBG == null) {
+                gameBG = new Image();
+                var img = GetGameImageBG("GameBG1");
+                var ctxall = document.createElement("canvas");
+                ctxall.height = _canvas.height;
+                ctxall.width = _canvas.width;
+                var ctsall = ctxall.getContext("2d");
+                ctsall.clearRect(0, 0, ctxall.width, ctxall.height);
+                ctsall.rotate(Math.PI / 180 * -90);//开始旋转
+                ctsall.drawImage(gameBGImg, img.left, img.top, img.width, img.height, -ctxall.height, 0, ctxall.height, ctxall.width);
+                //_cancontext.stroke();
+                gameBG.src = ctxall.toDataURL("image/png");
+            }
+            var n = 2;
+            var beginX = 0;
+            var beginY = 0;
+            var endX = 300;
+            var endY = 0;
+            var r = 0;
+            var foodball = GetGameImageBG("Football");
+            footballImg = GetFootball(foodball);
+            var bgAnimation = window.setInterval(function () {
+                n = (n > 5 ? 2 : n);
+                _cancontext.drawImage(gameBG, 0, 0, ctxall.width, ctxall.height, 0, 0, _canvas.width, _canvas.height);
+                var imgBG2 = GetGameImageBG("GameBG" + n++);
+                _cancontext.drawImage(gameBGImg, imgBG2.left, imgBG2.top, imgBG2.width, imgBG2.height, 0, 640, _canvas.width, 130);
+                AnimationImg(foodball, r++, beginX++, beginY++, endX, endY);
+            }, 50);
+            //_cancontext.drawImage(gameBG, 0, 0, ctxall.width, ctxall.height, 0, 0, _canvas.width, _canvas.height);
+            //var imgBG2 = GetGameImageBG("Football");
+            //_cancontext.drawImage(footballImg, 0, 0, 85, 70, 0, 0, 85, 70);
+        }
+        var footballImg;
+        function GetFootball(imgInfo) {
+            var ctxall = document.createElement("canvas");
+            ctxall.height = 70;
+            ctxall.width = 85;
+            var ctsall = ctxall.getContext("2d");
+            ctsall.drawImage(gameBGImg, imgInfo.left, imgInfo.top, imgInfo.width, imgInfo.height, 0, 0, 85, 70);
+            var img = new Image();
+            img.src = ctxall.toDataURL("image/png");
+            return img;
+        }
+        function AnimationImg(imgInfo, r, beginX, beginY, endX, endY) {
+            if (beginX > endX) {
+                beginX = endX;
+            }
+            if (beginY > endY) {
+                beginY = endY;
+            }
+            var ctxall = document.createElement("canvas");
+            ctxall.height = 70;
+            ctxall.width = 85;
+            var ctsall = ctxall.getContext("2d");
+            ctsall.translate(0, 0);
+            ctsall.clearRect(0, 0, ctxall.width, ctxall.height);
+            ctsall.rotate(Math.PI / 360 * r);//开始旋转
+            var x = (r % 360) / 2.5;
+            var y = 0;
+            ctsall.drawImage(footballImg, 0, 0, 85, 70, x, x, 85, 70);
+            var footBall = new Image();
+            footBall.src = ctxall.toDataURL("image/png");
+            _cancontext.drawImage(footBall, 0, 0, ctxall.width, ctxall.height, beginX, beginY, 85, 70);
+        }
+        function GetGameImageBG(imgName) {
+            var img = {};
+            switch (imgName) {
+                case "GameBG1":
+                    img.left = 2;
+                    img.top = 2;
+                    img.width = 550;
+                    img.height = 356;
+                    break;
+                case "GameBG2":
+                    img.left = 234;
+                    img.top = 1408;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "GameBG3":
+                    img.left = 302;
+                    img.top = 1481;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "GameBG4":
+                    img.left = 636;
+                    img.top = 1481;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "GameBG5":
+                    img.left = 568;
+                    img.top = 1408;
+                    img.width = 328;
+                    img.height = 71;
+                    break;
+                case "Football":
+                    img.left = 523;
+                    img.top = 1555;
+                    img.width = 68;
+                    img.height = 68;
+                    break;
+                default:
+                    break;
+            }
+            return img;
+        }
+    }
+</script>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0, target-densitydpi=device-dpi" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title></title>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/zepto.min.js"></script>
+    <script type="text/javascript" src="/js/PageSlider.js"></script>
+    <link href="/css/pageSlider.css" rel="stylesheet" />
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .section {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #FCC;
+        }
+
+            .section.current {
+                display: inline-block;
+            }
+
+            .section.next {
+                display: inline-block;
+                z-index: 2;
+            }
+
+            .section.prev {
+                display: inline-block;
+                z-index: 2;
+            }
+
+        .sec1 {
+            background-color: #FFCCCC;
+        }
+
+        .sec2 {
+            background-color: #4ACBF7;
+        }
+
+        .sec3 {
+            background-color: #63E339;
+        }
+
+        .sec4 {
+            background-color: #F7D34A;
+        }
+    </style>
+</head>
+<body>
+    <div class="section sec1">1</div>
+    <div class="section sec2">2</div>
+    <div class="section sec3">3</div>
+    <div class="section sec4">4</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        var pageSlider = PageSlider.case();
+    });
+</script>
